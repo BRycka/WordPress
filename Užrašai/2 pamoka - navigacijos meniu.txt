@@ -1,0 +1,41 @@
+Video medžiaga:
+    http://learnwebcode.com/learn-wordpress/
+    Youtube - https://www.youtube.com/watch?list=PLpcSpRrAaOaqMA4RdhSnnNcaqOVpX7qi5&v=AShql_Ap1Yo
+Papildoma info: "WordPress užrašai.txt"
+
+Antra pamoka - Navigacijos meniu ir puslapių redagavimas naudojant page.php:
+    * header.php faile, <header> tagą papildom <nav> tagu, kuriame kreipiames į wp_nav_menu() funkciją.
+        <nav class="site-nav">
+            <?php
+                $args = array(
+                    'theme_location' => 'primary'
+                );
+                wp_nav_menu($args);
+            ?>
+        </nav>
+    * footer.php faile, <footer> tagą papildom <nav> tagu, kuriame kreipiames į wp_nav_menu() funkciją.
+        <nav class="site-nav">
+            <?php
+                $args = array(
+                    'theme_location' => 'footer'
+                );
+                wp_nav_menu();
+            ?>
+        </nav>
+    * functions.php faile reikia užregistruoti sukurtus meniu vietas.
+        // Navigation Menus
+        register_nav_menus(array(
+            'primary' => __( 'Primary Menu' ),
+            'footer' => __( 'Footer Menu' )
+        ));
+    * Užregistruotus meniu galime valdyti per wp-admin. Appearance->Menus->create a new menu.
+        Kuriant menu pasirenkam norimą meniu vietą iš sarašo (saraše mūsų užregistruotos vietos) ir
+        priskiriam tam meniu norimus puslapius iš sąrašo kairėje.
+        Meniu vietas galima valdyti ir Appearance->Menus->Manage Locations sekcijoje.
+        Meniu nuorodų išdėstymą per wp-admin galima keisti sukurtame meniu tiesiog pertempiant nuorodą į norimą vietą.
+    * Pridedam norimą stilių (plačiau "WordPress užrašrai.txt").
+    * Norint redaguoti puslapius ("pages" - tai kas matoma vizito metu konkrečiame puslapyje),
+        reikia sukurti page.php failą.
+        Į jį galima nukopijuoti viską iš index.php ir atlikti norimas korekcijas.
+        Pakeitimai bus matomi tik lankant puslapius, bet postai ir pagrindinis puslapis isliks toks, koks jis bus index.php.
+        Page.php faile sukurtos klasės ir id bus naudojami tik puslapių dizainui.
