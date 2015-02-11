@@ -1,0 +1,66 @@
+Video medžiaga:
+    http://learnwebcode.com/learn-wordpress/
+    Youtube - https://www.youtube.com/watch?list=PLpcSpRrAaOaqMA4RdhSnnNcaqOVpX7qi5&v=k7olvEeBM2I#t=1285
+Papildoma info: "WordPress užrašai.txt"
+
+Pirma pamoka - Naujos temos sukūrimas:
+    * Sukuriam naują folderį "wp-content/themes/" aplanke ir jį pavadiname taip, kaip norime kad vadintūsi nauja tema.
+    * Naujame folderyje sukuriam failus: index.php, style.css, header.php, footer.php, functions.php.
+        style.css failą pradedame komentaru, kuriame nurodom temos informacija:
+            /*
+            Theme name: MyTheme
+            Author: Author
+            Version: 1.0
+            */
+            Toliau seka css kodas.
+        index.php failas prasideda get_header(); ir baigiasi get_footer(); funkcijomis.
+            Jos įtraukia atitinkamai headerį ir footerį. Tarp jų galima vykdyti norimą logiką.
+            get_header();
+
+            if (have_posts()) {
+                while (have_posts()) {
+                    the_post(); ?>
+                    <article class="post">
+                        <h2><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
+                        <?php the_content(); ?>
+                    </article>
+            <?php }
+            } else {
+                echo '<p>No Content Found</p>';
+            }
+
+            get_footer();
+        header.php apima html tagus kurie reikalingi pries turinį (DOCTYPE, html, body ir t.t.).
+            <!DOCTYPE html>
+            <html <?php language_attributes(); ?>>
+            <head>
+                <meta charset="<?php bloginfo('charset'); ?>"/>
+                <meta name="viewport" content="width=device-width"/>
+                <title><?php bloginfo('name'); ?></title>
+                <?php wp_head(); ?>
+            </head>
+            <body <?php body_class(); ?>>
+
+            <div class="container">
+
+                <header class="site-header">
+                    <h1><a href="<?php echo home_url(); ?>"><?php bloginfo('name'); ?></a></h1>
+                    <h5><?php bloginfo('description'); ?></h5>
+                </header>
+        footer.php apima html tagus kurie reikalingi po turinio (/body, /html ir t.t.).
+                <footer class="site-footer">
+                    <p><?php bloginfo('name');?> - &copy; <?php echo date('Y'); ?></p>
+                </footer>
+            </div> <!-- div.container -->
+            <?php wp_footer(); ?>
+            </body>
+            </html>
+        functions.php - cia registruojamos įvairios funkcijos, šiuo atvėju funkcija įtrauks css failus.
+            (Veikimo principas tas pats kaip <head><link rel="stylesheet" href="#" type="text/css"/></head>)
+            function project_resources()
+            {
+                wp_enqueue_style('style', get_stylesheet_uri());
+            }
+
+            add_action('wp_enqueue_scripts', 'project_resources');
+    * Per wp-admin menu, Appearance->Themes pasirenkam naujai sukurtą temą.

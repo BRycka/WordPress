@@ -1,0 +1,149 @@
+https://www.youtube.com/playlist?list=PLpcSpRrAaOaqMA4RdhSnnNcaqOVpX7qi5 - theme
+http://learnwebcode.com/learn-wordpress/ - theme
+https://www.airpair.com/wordpress/posts/developing-wordpress-plugin-from-scratch - plugin
+
+1.Create WordPress Theme From Scratch
+	index.php - atsakingas už postus ir page, bet sukurus page.php, jis taps atsakingu už pages, o index.php liks atsakingas už postus.
+		if(have_posts()) - tikrinti ar yra postu.
+		while(have_posts()) { the_post(); } - sintaksė pereiti per visus postus.
+		the_title() - išspausdina posto title.
+		the_permalink() - nukreipia būtent į tą postą kurio linka paspaudžiam. pvz: <a href="<?php the_permalink(); ?>"><?php the_title();?></a>
+		the_content() - išspausdina posto kontentą.
+		get_header() ir get_footer() - įtraukia headerį ir footeri. Norint modifikuoti juos, reikia sukurti header.php ir footer.php failus konkrečioje temoje.
+		charset nustatomas header.php faile head daly - <meta charset="<?php bloginfo('charset'); ?>">
+		Dėl responsive design head dalyje nustatomas ir viewport - <meta name="viewport" content="width=device-width">
+		Title galima nustatyti taip - <title><?php bloginfo('name'); ?></title> - title bus lygus puslapio pavadinimui.
+		wp_head() - sita funkcija būtina tam, kad ateityje įrašius pluginus ir t.t., jie naudotu būtent šitą head tagą.
+		<head> tage nurodom kokia kalba bus naudojama - <head <?php language_attributes(); ?>>
+		<body> tage nurodom funkciją body_class(); - <body <?php body_class(); ?>>
+		bloginfo('name'); - site name
+		bloginfo('description'); - trumpas svetainės aprašymas
+		home_url(); - home page linkas. pvz: <a href="<?php echo home_url(); ?>">link name </a>
+		wp_footer() - sita funkcija būtina kaip ir wp_head headeryje.
+		echo date('formatas') - nurodomas formatas: Y-metai, ...
+	style.css - /* 
+					Theme Name: name
+					Author: author
+					Version: version
+				*/
+	function.php - čia aprošomos visos funkcijos susyjusios su konfiguracija.
+		Per šį failą galima įtraukti css failus sukuriant nauja funkcija bet kokiu pavadinimu ir pridedant ją į add_action() funkciją;
+		Pvz: function pavadinimas() {
+			wp_enqueue_style('style', get_stylesheet_uri());//wp_enqueue_style('nameBetKoks', cssFile) - taip uzkraunami stiliai. get_stylesheet_uri() - uzkrauna style.css.
+															//Norint rasti kitą css reikia naudoti pvz: plugins_url('path.css', __FILE__)
+		}
+		add_action('wp_enqueue_scripts', 'sukurtos funkcijos pavadinimas');//kai WP krauna savo stilius, tada kvieciama ir nurodyta funkcija.
+2.Navigation Menu
+	wp_nav_menu() - šita funkcija automatiškai išspausdina menu su visais egzistuojančiais page. F-cija reikia dėti i <nav></nav> tagą. 
+		Kuriamam navigacijos menu reikia priskirti jo vietą. Tą galima padaryti perduodant parametrą ($args). $args - tai masyvas kuris kuriame saugoma vietos reikšmė(‘primary’, ‘footer’ ir t.t.).
+	 	pvz.: <?php $args = array(‘theme_location’ => ‘primary’); ?><nav class=“site-nav”><?php wp_nav_menu($args); ?></nav>
+	Taip pat reikia užregistruoti sukurtas nav. menu locations per function.php failą.
+		Tam reikia sukurti naują funkciją register_nav_menus(array(//čia sudėti registruojamas location.)); 
+		Pvz.: register_nav_menus(array(‘primary’//$args masyve naudota reikšmė. => __( ‘Primary Menu’//ši reikšmė bus matoma vartotojui per wp-admin panele. ), ‘footer’ => __( ‘Footer Menu’ )));
+	Sukurti nauja menu per wp-admin: Appearance -> Menus -> Edit Menus, įvesti pavadinima ir -> Save Menu. Į sukurtą menu galim pridėti norimus page.
+	Priskirti menu location: Appearance -> Menus -> Manage Locations, priskirti norimam location norimą meniu.
+	CSS: Kad nurodyti atskirą naudojamo meniu punkto dizainą, wordpress turi css funkciją .current-menu-item.
+		Pvz.: .site-header nav ul li.current-menu-item a:link, .site-header nav ul li.current-menu-item a:visited { background-color: SomeColor; }
+3.Page Templates
+	Page.php - atsakingas už page turinio atvaizdavimą.
+	Yra keli būdai pritaikyti skirtinga dizainą skirtingiems pages.
+	Pirmas būdas yra naudojant IF salygą.
+		is_page(x) - tikrina ar atidarytas nurodytas puslapis. x = puslapio ID, arba slug.
+		Galima tikrinti, jei atidarytas tam tikras puslapis, tada galima atlikti norimus veiksmus.
+		PVZ.: <?php if(is_page(13)) {?> Šita dalis vykdoma tik esant puslapiui kurio ID yra 13. <?php } ?>
+		Šis būdas patogus norint prideti atskira kontentą ar šiaip paprastą tekstą.
+	Antras būdas yra sukurti naują failą pavadinimu page-ID/Slug.php.
+		Viskas kas nurodyta šiame page-ID/Slug.php faile galios tik puslapiui kuris turi nurodytą ID arba Slug.
+	Trečias būdas sukurti nauja failą bet kokiu pavadinimu.
+		PVZ.: special_template.php.
+		Failas turi prasideti komentaru: <?php 	/*
+							Template Name: Norimas pavadinimas
+							*/
+		Tada per wp-admin, pasirinkus norimą puslapį page skiltyje ir ant jo paspaudus, dešinėje pusėje esančiam meniu yra skiltis Page Attributes.
+		Ten galima pasirinkti sukurtą template bet kuriam norimam puslapiui.
+4.Child Page Menu(parent and subpages) - submenu
+	wp_list_pages() - išspausdina visų page hiararchiją. (Įskaitant ir pages ir subpages).
+	Norint išspausdinti tik pages ir subpages to puslapio kuriame esama, funkcijai reikia perduoti $args masyvą.
+		PVZ.: <?php $args = array('child_of' => $post->ID, 'title_li' => ''); wp_list_pages($args); ?>, taip bus rodomi tik esamo puslapio subpages.
+			Bet naudojant šitą būdą, ir paspaudus ant child elemento, subpages menu išnyks. Norint to išvengti reikia perdaryti $args masyvą ir sukurti funkciją functions.php faile.
+			Visų pirma functions.php faile sukuriam funkciją bet kokiu pavadinimu.
+				get_post_ancestors($post->ID) - suranda visą puslapio hiararchiją(tėvas, vaikas, vaiko vaikas ir t.t.).
+				array_reverse() - apverčia masyvą(elementai prasideda nuo galo, tai reiškia, kad masyvo paskutinis elementas bus kaip 0 elementas, priešpaskutinis elementas bus kaip 1 elementas ir t.t.).
+					PVZ.: 	function get_top_ancestor_id() {
+								global $post; //užtikrinam kad $post yra prieinamas.
+								if($post->post_parent) { //tikrinam ar puslapis turi tėvą ar pats jau yra aukščiausios hiararchijos.
+									$ancestors = array_reverse(get_post_ancestors($post->ID));
+									return $ancestors[0]; //gražinamas tėvo puslapio id jei yra žiūrimas to tėvo vaiko puslapis.
+								}
+								return $post->ID; //jei puslapis yra pats sau tėvas, tai gražinamas jo pačio id.
+							}
+			Sukūrus šią funkciją functions.php faile, reikia pakoreguoti prieš tai sukurtą $args masyvą ir vietoj $post->ID kreiptis į sukurtą funkciją.
+				PVZ.: <?php $args = array('child_of' => get_top_ancestor_id(), 'title_li' => ''); wp_list_pages($args); ?>
+	get_the_title(get_top_ancestor_id()); - šiuo atvėju būtų grąžinamas tėvo puslapio title.
+	get_the_permalink(get_top_ancestor_id); - šiuo atvėju būtu gaunamas linkas į tėvo puslapį.
+	Kad pasirinkus child menu puslapį būtų paryškintas ir tėvo menu mygtukas, WordPress turi specialią CSS funkciją .current-page-ancestor, ji naudojamą kaip ir .current-menu-item. 
+	kad child menu būtų rodomas tik jei puslapis turi vaikų, reikia visą aprašytą child menu logiką statyti į IF salygą. if(has_children() OR $post->post_parent > 0) { child logika }
+	$post-post_parent > 0 - taip patikrinama ar puslapis nėra pats sau tėvas.
+	has_children() - WP šios funkcijos neturi, todėl ją reikia sukurti functions.php faile.
+		PVZ.: 	function has_children() {
+					global $post;
+					$pages = get_pages('child_of='.$post->ID);//ieškoma pages kurie yra vaikai esamam puslapiui.
+					return count($pages);//skaičiuojama kiek rasta vaikų, jei jų nerasta, tada grąžinamas 0. 0-false.
+				}
+5.Post Meta Data
+	the_time('F jS, Y g:i a') - WordPress funkcija, kuri grąžina laiką, kada buvo parašytas postas. F - month, j - day, S - suffix(st, nd, th), Y - year, g:i - valanda:minutės, a - (pm/am).
+	the_author() - grąžina posto autoriu.
+	get_author_posts_url(get_the_author_meta('ID')); - linkas į konkretaus autoriaus postus.
+	get_the_category(); - gražina masyvą su kategorijomis, kuriuose buvo išsaugotas šis postas.
+		PVZ.: $categories = get_the_category(); $output = ''; foreach($categories as $category) { $output .= $category->cat_name }
+	get_category_link($category->term_id); - gaunamas linkas į pasirinktą kategoriją.
+	cat_name - propertis, kuris grąžina kategorijos pavadinimą.
+	term_id - propertis kuris grąžina kategorijos id.
+6.Archive Theme
+	archive.php - skirtas atvaizduoti archyvui, pvz atvaizduoti kokia kategorija pasirinkta, koks autorius pasirinktas ir t.t. (galima kopinti kodą iš index.php)
+	is_category() - tikrina ar pasirinkta kategorija.
+		single_cat_title() - grąžina pasirinktos kategorijos title.
+	is_tag() - tikrina ar pasirinktas tagas.
+		single_tag_title() - grąžina pasirinkto tago title.
+	is_author() - tikrina ar pasirinktas autorius.
+		the_post(); echo get_the_author(); - grąžina pasirinkto autoriaus name.
+	is_day() - tikrina ar pasirinkta diena.
+		echo get_the_date(); - Grąžina datą.
+	is_month() - tikrina ar pasirinktas mėnuo.
+		echo get_the_date('F Y'); - Grąžina mėnesį ir metus. F - mėnuo, Y - metai.
+	is_year() - tikrina ar pasirinkti metai.
+		echo get_the_date('Y'); - Grąžina metus.
+	
+7."Read More" Links And Excerpts
+	Excerpts - reiškia galimybe rodyti tik dalį teksto bendrame kontente, ir tik užėjus į postą galima matyti visą posto tekstą.
+	Vienas iš būdų tai padaryti yra per wp-admin panele. Posts->All Posts->Add New/Edit. Bet tai daroma kekvienam postui atskirai.
+		Jei pasirinktas Visual rėžimas, tada įrankių juostoje matoma ikona "Insert Read More Tag", jei pasirinktas Text rėžimas, tada įrankių juostoje matomas "more" tagas.
+		Taip pat per wp-admin iškart po postu excerpt laukelyje galima priskirti tekstą, kuris bus rodomas vietoj sutrumpinto teksto.
+		Norint pakeisti "More..." užraša reikia tiesiog nurodyti the_content('norimas tekstas kuris bus rodomas vietoj More...');
+	Kitas būdas yra padaryti kad visi postai būtu nukerpami.
+		Sukuriam single.php failą ir ten nukopijuojam viska iš index.php. Single.php bus atsakingas už vieno posto atvaizdavima, todel turės rodyti pilną tekstą, todėl ten paliekam the_content();
+		Index.php faile vietoj the_content(); reikia naudoti the_excerpt(); funkciją. By default ši funkcija atvaizduoja 55 zodzius.
+		The_excerpt(); funkcija pati neatvaizduoja "More..." linko, vietoj to vaizduoja "[...]", bet be linko.
+			Norint tai pataisyti reikia naudoti ne the_excerpt();, bet echo get_the_excerpt();. šiai funkcijai reikia parašyti ir html kodą(<p><?php echo get_the_excerpt();?></p>).
+			Tame pačiame <p></p> tage iškart po get_the_excerpt funckijos galime padaryti nuorodą į tą postą su "More..." ar betkokiu kitu užrašu.
+			PVZ.: <p><?php echo get_the_excerpt();?><a href="<?php the_permalink();?>">Read more &raquo;</a></p>
+	Norint, kad excerpt atvaizduotu ne 55 zodzius, reikia parasyti tam funkciją function.php faile.
+		PVZ.: 	function custom_excerpt_length() { //funkcijos pavadinimas gali būti bet koks.
+					return 25; //norimas zodziu skaičius.
+				}
+				add_filter('excerpt_length', 'custom_excerpt_length);
+	if($post->post_excerpt) {} - taip galima patikrinti ar postas naudoja excerpt iš wp-admin.
+8.Featured Image - Custom Size
+	Cia baigiau
+9.Search Form And Results
+	
+10.get_template_part() - Theme Development
+	
+11.Post Formats
+	
+12.Widgets
+	
+13.Setup Custom (Static) Homepage
+	
+14.Custom Loop WP_query
+	
