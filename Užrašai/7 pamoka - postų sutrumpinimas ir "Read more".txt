@@ -1,0 +1,37 @@
+Video medžiaga:
+    http://learnwebcode.com/wordpress-read-more-links-and-excerpts/
+    Youtube - https://www.youtube.com/watch?v=nS-3kC9VC4A
+Documentation:
+    http://codex.wordpress.org/Function_Reference/the_excerpt#Default_Usage
+Papildoma info: "WordPress užrašai.txt"
+
+Septinta pamoka - Postų teksto sutrumpinimas pagrindiniame puslapyje ir "Read more..." linkas:
+    * Norint kad postų tekstai pagrindiniame puslapyje būtų sutrumpinti, index.php faile vietoj the_content();
+        funkcijos reikia naudoti the_excerpt(); funkciją. Nenurodžius kitaip, postų tekstas bus sutrumpintas
+        iki 55 žodžiū. Gale sutrumpinto posto bus "[...]".
+        Norint pakeisti jį į savo užrašą, reikia vietoj the_excerpt(); funkcijos naudoti
+        echo get_the_excerpt(); funkciją. Ši funkcija negražins <p> tagų, todėl juos reikia pridėti pačiam.
+        iškart po get_the_excerpt funkcijos galima spausdinti savo tekstą, kuris bus matomas vos tik
+        pasibaigus sutrumpintam postui. Taip pat šį užrašą galima pakeisti naudojant functions.php failą:
+
+            // String of the excerpt
+            function new_excerpt_more()
+            {
+                return '...';
+            }
+
+            add_filter('excerpt_more', 'new_excerpt_more');
+
+        Taip pat per functions.php galima nurodyti kiekį žodžių, iki kurio bus trumpinami postai:
+
+            // Customize excerp word count length (default value is 55 (max = 140?))
+            function custom_excerpt_length()
+            {
+                return 100;
+            }
+
+            add_filter('excerpt_length', 'custom_excerpt_length');
+
+        Tam, kad įėjus į postą jis būtų matomas visas, o ne nukirptas, temos aplanke reikia sukurti single.php failą.
+            Į jį galima nukopijuoti viską iš index.php ir vietoj get_the_excerpt(); funkcijos ir <p> tago naudoti
+            the_content(); funkciją.

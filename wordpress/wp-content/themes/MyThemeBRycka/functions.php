@@ -42,3 +42,19 @@ function has_children()
     return count($pages);
 
 }
+
+// Customize excerp word count length (default value is 55 (max = 140?))
+function custom_excerpt_length()
+{
+    return 100;
+}
+
+add_filter('excerpt_length', 'custom_excerpt_length');
+
+// String of the excerpt
+function new_excerpt_more()
+{
+    return '...';
+}
+
+add_filter('excerpt_more', 'new_excerpt_more');

@@ -32,7 +32,10 @@ if (have_posts()) {
                 ?>
             </p>
 
-            <?php the_content(); ?>
+            <p>
+                <?php echo get_the_excerpt(); ?>
+                <a href="<?php the_permalink(); ?>"> more &raquo;</a>
+            </p>
         </article>
 <?php }
 } else {
