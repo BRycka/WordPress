@@ -3,7 +3,7 @@ Video medžiaga:
     Youtube - https://www.youtube.com/watch?v=ynA8_5jAc1s#t=51
 Papildoma info: "WordPress užrašai.txt"
 
-Trečia pamoka - atskirų puslapių redagavimas:
+Trečia pamoka - Atskirų puslapių redagavimas:
     * Pirmas būdas redaguoti atskirą puslapį yra naudojant IF salygą (Conditional logic).
         <?php if (is_page(2)) { ?>
             - This one is visible just in Page with ID = 2!

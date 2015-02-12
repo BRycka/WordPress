@@ -1,0 +1,34 @@
+Video medžiaga:
+    http://learnwebcode.com/wordpress-archive-theme-tutorial-archive-php/
+    Youtube - https://www.youtube.com/watch?v=3fgEgzPx7QM
+Papildoma info: "WordPress užrašai.txt"
+
+Šešta pamoka - Archive atvaizdavimas:
+    * Temos kataloge reikia sukurti failą archive.php.
+        Į jį galima nukopijuoti viską iš index.php. norimoje vietoje tikrinam ar nustatytas koks nors "archive",
+        jei taip, išspaudinam norimą tekstą.
+            <?php
+                switch(is_archive()) {
+                    case is_category():
+                        single_cat_title();
+                        break;
+                    case is_tag():
+                        single_tag_title();
+                        break;
+                    case is_author():
+                        the_post();
+                        echo "Author Archives: ".get_the_author();
+                        rewind_posts();
+                        break;
+                    case is_day():
+                        echo "Daily Archives: ".get_the_date();
+                        break;
+                    case is_month():
+                        echo "Daily Archives: ".get_the_date("F Y");
+                        break;
+                    case is_year():
+                        echo "Daily Archives: ".get_the_date("Y");
+                        break;
+                    default:
+                        echo "Archives";
+                }
