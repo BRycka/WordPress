@@ -11,7 +11,12 @@ get_header();
 if (have_posts()) {
     while (have_posts()) {
         the_post(); ?>
-        <article class="post">
+        <article class="post <?php if (has_post_thumbnail()) { echo 'has-thumbnail'; } ?>">
+
+            <div class="post-thumbnail">
+                <a href="<?php the_permalink(); ?>"><?php the_post_thumbnail('small-thumbnail'); ?></a>
+            </div>
+
             <h2><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
 
             <p class="post-info">

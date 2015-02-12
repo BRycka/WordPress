@@ -1,0 +1,21 @@
+Video medžiaga:
+    http://learnwebcode.com/wordpress-featured-image-custom-size/
+    Youtube - https://www.youtube.com/watch?v=L_4crhIoXfY
+
+Aštunta pamoka - Postų paveiksliukų atvazdavimas, dydžio fiksavimas.
+    * Kad galėtumėm naudoti "Featured image" funkciją per wp-admin,
+        pirmiausia turime ją užregistruoti per functions.php.
+            function bet_koks_pavadinimas()
+            {
+                // Add featured image support
+                add_theme_support('post-thumbnails');
+                add_image_size('small-thumbnail', 180, 120, true); //any_name, width, height, true/false?
+                add_image_size('banner-image', 'auto', 210, true); //any_name, width, height, true/false?
+            }
+            add_action('after_setup_theme', 'bet_koks_pavadinimas');
+        Tada per wp-admin nuėjus į bet kurį postą, dešinėje pusėje apačioje galima rasti "Featured Image" sekciją ir
+        pasirinkti norimą paveikslėlį.
+        index.php faile atvaizduojam paveikslėlį: <?php the_post_thumbnail('small-thumbnail'); ?>
+        single.php faile atvaizduojam paveikslėlį: <?php the_post_thumbnail('banner-image'); ?>
+        index.php ir single.php paveiksleliai bus functions.php faile nustatytų dydžių
+        (pagal pavadinimus: small-thumbnail/banner-image ir t.t.)

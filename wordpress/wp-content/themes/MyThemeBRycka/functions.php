@@ -14,11 +14,7 @@ function project_resources()
 add_action('wp_enqueue_scripts', 'project_resources');
 
 
-// Navigation Menus
-register_nav_menus(array(
-    'primary' => __( 'Primary Menu' ),
-    'footer' => __( 'Footer Menu' )
-));
+
 
 // Get top ancestor
 function get_top_ancestor_id()
@@ -58,3 +54,20 @@ function new_excerpt_more()
 }
 
 add_filter('excerpt_more', 'new_excerpt_more');
+
+// Theme setup
+function wordpress_setup()
+{
+    // Navigation Menus
+    register_nav_menus(array(
+        'primary' => __( 'Primary Menu' ),
+        'footer' => __( 'Footer Menu' )
+    ));
+
+    // Add featured image support
+    add_theme_support('post-thumbnails');
+    add_image_size('small-thumbnail', 180, 120, true);
+    add_image_size('banner-image', 'auto', 210, true);
+}
+
+add_action('after_setup_theme', 'wordpress_setup');
