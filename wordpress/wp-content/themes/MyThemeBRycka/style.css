@@ -113,3 +113,37 @@ article.post:last-of-type {
 article.page h2 {
     font-size: 300%;
 }
+
+/* Clearfix */ /* Duplicated with .site-nav ul */
+.clearfix:before, .clearfix:after { content: ""; display: table; }
+.clearfix:after { clear: both; }
+.clearfix { *zoom: 1; }
+
+/* Two column title layout */
+div.title-column {
+    width: 30%;
+    float: left;
+}
+
+/* Two column text layout */
+div.text-column {
+    width: 70%;
+    float: right;
+}
+
+/* Info box style */
+div.info-box {
+    width: 30%;
+    float: right;
+    margin: 0 0 30px 30px;
+    padding: 20px;
+    background-color: #EEEEEE;
+}
+
+div.info-box h4 {
+    margin-bottom: 6px;
+}
+
+div.info-box p {
+    font-size: 85%;
+}

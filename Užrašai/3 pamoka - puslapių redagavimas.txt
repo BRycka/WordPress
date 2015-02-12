@@ -1,0 +1,35 @@
+Video medžiaga:
+    http://learnwebcode.com/wordpress-page-templates-tutorial/
+    Youtube - https://www.youtube.com/watch?v=ynA8_5jAc1s#t=51
+Papildoma info: "WordPress užrašai.txt"
+
+Trečia pamoka - atskirų puslapių redagavimas:
+    * Pirmas būdas redaguoti atskirą puslapį yra naudojant IF salygą (Conditional logic).
+        <?php if (is_page(2)) { ?>
+            - This one is visible just in Page with ID = 2!
+        <?php } ?>
+
+        ARBA
+
+        <?php if (is_page('portfolio')) { ?>
+            - This one is visible just in Page with SLUG = portfolio!
+        <?php } ?>
+
+        ID arba SLUG galima sužinoti iš URL puslapio vizito metu. URL gali rodyti arba ID arba SLUG,
+        tą galima nusistatyti per wp-admin: Settings->Permalinks.
+        Naudojant šį puslapio redagavimo būdą galima į norimą puslapį pridėti išskirtinį kontentą, dizainą ir t.t.
+    * Antras būdas redaguoti atskirą puslapį yra temos aplanke sukurti failą page-ID.php, arba page-slug.php.
+        Į ji galima nukopijuoti viską iš page.php ir atlikti norimas korekcijas.
+        Jos bus matomas tik puspalyje su failo pavadinime nurodytu ID arba slug.
+    * Trečias būdas leidžia sukurti šabloną, kurį galima naudoti daugiau nei vienam puslapiui pasirinktinai:
+        Tam reikia sukurti naują failą pavyzdys-template.php.
+        Failo turinys turi prasidėti komentaru kur būtų nurodytas kuriamo šablono pavadinimas:
+            <?php
+            /*
+            Template Name: Name of Layout
+            */
+        Į jį galima nukopijuoti viską iš page.php ir atlikti norimas korekcijas.
+        Per wp-admin sukurtą šabloną galime priskirti bet kuriam puslapiui.
+        Tam tereikia Pages sekcijoje pasirinkti norimą puslapį ir vieną iš variantų:
+            1. Paspausti ant puslapio, atsidariusiame lange dešinėje prie Page Attributes nustatyti norimą Template.
+            2. Prie puslapio pasirinkti Quick Edit ir pasirinkti norimą šabloną (Template).

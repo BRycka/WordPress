@@ -12,7 +12,9 @@
 
     <header class="site-header">
         <h1><a href="<?php echo home_url(); ?>"><?php bloginfo('name'); ?></a></h1>
-        <h5><?php bloginfo('description'); ?></h5>
+        <h5><?php bloginfo('description'); ?><?php if (is_page(2)) { ?>
+                - This one is visible just in Sample Page!
+            <?php } ?></h5>
 
         <nav class="site-nav">
             <?php
