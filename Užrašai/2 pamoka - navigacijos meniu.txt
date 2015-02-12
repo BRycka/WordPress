@@ -1,5 +1,5 @@
 Video medžiaga:
-    http://learnwebcode.com/learn-wordpress/
+    http://learnwebcode.com/wordpress-theme-development-navigation-menus/
     Youtube - https://www.youtube.com/watch?list=PLpcSpRrAaOaqMA4RdhSnnNcaqOVpX7qi5&v=AShql_Ap1Yo
 Papildoma info: "WordPress užrašai.txt"
 

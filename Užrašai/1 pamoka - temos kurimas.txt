@@ -1,5 +1,5 @@
 Video medžiaga:
-    http://learnwebcode.com/learn-wordpress/
+    http://learnwebcode.com/create-wordpress-theme-from-scratch/
     Youtube - https://www.youtube.com/watch?list=PLpcSpRrAaOaqMA4RdhSnnNcaqOVpX7qi5&v=k7olvEeBM2I#t=1285
 Papildoma info: "WordPress užrašai.txt"
 

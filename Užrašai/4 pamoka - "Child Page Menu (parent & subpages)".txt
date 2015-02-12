@@ -1,0 +1,45 @@
+Video medžiaga:
+    http://learnwebcode.com/wordpress-child-page-menu-parent-and-subpages/
+    Youtube - https://www.youtube.com/watch?list=PLpcSpRrAaOaqMA4RdhSnnNcaqOVpX7qi5&v=GHTZn3atTcM#t=21
+Papildoma info: "WordPress užrašai.txt"
+
+Ketvirta pamoka - Child pages menu sukūrimas:
+    * Ten kur norima sukurti Child puslapių meniu, reikia kreiptis į funkciją: wp_list_pages();
+        Ši funkcija atvaizduoja visus puslapius ir jų vaikus,
+        todėl norint gauti reikiamus vaikus jai reikia perduoti parametrus:
+            <?php $args = array(
+              //'child_of' => $post->ID,
+                'child_of' => get_top_ancestor_id(),
+                'title_li' => ''
+            );
+            wp_list_pages($args); ?>
+        'child_of' => $post->ID atrinks tik to puslapio vaikus, bet paspaudus ant kurios nors iš
+        vaikų nuorodos Child meniu dings. Kad to išvengti, reikia sukurti savo funkciją bet kokiu pavadinimu.
+        (Šiuo atvėju get_top_ancestor_id();).
+        Funkcija turi būti sukurta functions.php faile.
+            // Get top ancestor
+            function get_top_ancestor_id()
+            {
+                global $post;
+
+                if ($post->post_parent) {
+                    $ancestors = array_reverse(get_post_ancestors($post->ID));
+                    return $ancestors[0];
+                }
+
+                return $post->ID;
+            }
+        Ji grąžina puslapio tėvo id, todėl naudojant jį visada bus matomas Child meniu.
+        Kad Child meniu būtų matomas tik jei puslapis turi vaikų, naudota if salyga:
+            if (has_children() OR $post->post_parent > 0) { }
+        $post->post_parent > 0 - tikrina ar puslapis yra tėvas kam nors ar pats sau.
+        has_children() funkcija reikia sukurti patiems, ji tikrina ar puslapis turi vaikų.
+        Funkciją reikia sukurti functions.php faile.
+            // Does page have children?
+            function has_children()
+            {
+                global $post;
+                $pages = get_pages('child_of='.$post->ID);
+                return count($pages);
+            }
+        Jei funkcija grąžina nuli, tai lygu false, kitu atvėju bus true.
