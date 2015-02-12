@@ -1,0 +1,23 @@
+Video medžiaga:
+    http://learnwebcode.com/wordpress-date-author-category-output-in-theme/
+    Youtube - https://www.youtube.com/watch?v=Q8THcwOmkpc
+Papildoma info: "WordPress užrašai.txt"
+
+Penkta pamoka - postų meta infornacijos atvaizdavimas:
+    * <p class="post-info">
+          <?php the_time('F jS, Y g:i a'); ?> | by
+          <a href="<?php echo get_author_posts_url(get_the_author_meta('ID')); ?>">
+              <?php the_author(); ?>
+          </a> | Posted in
+          <?php
+              $categories = get_the_category();
+              $separator = ", ";
+              $output = "";
+              if ($categories) {
+                  foreach ($categories as $category) {
+                      $output .= '<a href="'.get_category_link($category->term_id).'">'.$category->cat_name.$separator.'</a>';
+                  }
+                  echo trim($output, $separator);
+              }
+          ?>
+      </p>
