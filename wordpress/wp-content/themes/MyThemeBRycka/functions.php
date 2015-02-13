@@ -68,6 +68,9 @@ function wordpress_setup()
     add_theme_support('post-thumbnails');
     add_image_size('small-thumbnail', 180, 120, true);
     add_image_size('banner-image', 'auto', 210, true);
+
+    // Add post format support
+    add_theme_support('post-formats', array('aside', 'gallery', 'link'));
 }
 
 add_action('after_setup_theme', 'wordpress_setup');

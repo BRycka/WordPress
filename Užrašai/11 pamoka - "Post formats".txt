@@ -1,0 +1,31 @@
+Video medžiaga:
+    http://learnwebcode.com/wordpress-post-formats-tutorial/
+    Youtube - https://www.youtube.com/watch?v=--5I-avZUcY
+
+Vienuolikta pamoka - "Post formats" naudojimas "get_template_part()" funkcijoje:
+    * Pirmiausia turime uzregistruoti "Post formats" per funkcions.php failą:
+        // Theme setup
+        function wordpress_setup()
+        {
+            ...
+            // Add post format support
+            add_theme_support('post-formats', array('aside', 'gallery', 'link'));
+        }
+        add_action('after_setup_theme', 'wordpress_setup');
+        Išviso yra 9 "Post format" rūšys: aside, gallery, link, image, quote, status, video, audio, chat.
+        Kekvieną jų norint naudoti reikia užregistruoti per functions.php.
+        Užregistravus per wp-admin jau galime naudoti "Post formats".
+            !!! "get_template_part('content');" !!!
+            !!! funkcijoje reikia nurodyti antra parametrą: "get_template_part('content', get_post_format());" !!!
+    * Gallery
+        Posts->Add New->(Įvedam title)->Add Media->Create Gallery->Upload Files->Create a new gallery->Update gallery.
+        Kuriant posta dešinėje pusėje taip pat reikia parinkti "Format" -> Gallery.
+        Temos aplanke reikia sukurti naują failą - content-gallery.php ir ten atvaizduoti galeriją taip kaip norim.
+    * Aside
+        Posts->Add New->Format->Aside.
+        Temos aplanke reikia sukurti naują failą - content-aside.php ir ten atvaizduoti aside taip kaip norim.
+    * Link
+        Posts->Add New->Format->Link
+        Temos aplanke reikia sukurti naują failą - content-link.php ir ten atvaizduoti link taip kaip norim.
+    ! Pastaba. Kur buvo naudota funkcija get_template_part('content'); ji neatvaizduos "Post formats" taip kaip norime
+        jei nepridėsim dar vieno parametro: get_template_part('content', get_post_format());
