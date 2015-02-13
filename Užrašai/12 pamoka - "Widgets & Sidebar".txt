@@ -1,0 +1,51 @@
+Video medžiaga:
+    http://learnwebcode.com/wordpress-widgets-tutorial/
+    Youtube - https://www.youtube.com/watch?v=QxeQBPgftRE
+
+Dvylikta pamoka - "Widgets & Sidebars":
+    * Kad būtų galima naudoti widget'us, pirma  reikia užregistruoti jų vietas functions.php faile.
+        Tam reikia susikurti funkcija bet kokiu pavadinimu ir joje uzregistruoti visas norimas widget'ų vietas:
+            //Add our widgets locations
+            function ourWidgetsInit()
+            {
+                register_sidebar(array(
+                    'name' => 'Sidebar',
+                    'id' => 'sidebar1',
+                    'before_widget' => '<div class="widget-item side-widget">',
+                    'after_widget' => '</div>',
+                    'before_title' => '<h4 class="my-special-class">',
+                    'after_title' => '</h4>'
+                ));
+                register_sidebar(array(
+                    'name' => 'Footer Area 1',
+                    'id' => 'footer1',
+                    'before_widget' => '<div class="widget-item">',
+                    'after_widget' => '</div>',
+                ));
+                register_sidebar(array(
+                    'name' => 'Footer Area 2',
+                    'id' => 'footer2',
+                    'before_widget' => '<div class="widget-item">',
+                    'after_widget' => '</div>',
+                ));
+                register_sidebar(array(
+                    'name' => 'Footer Area 3',
+                    'id' => 'footer3',
+                    'before_widget' => '<div class="widget-item">',
+                    'after_widget' => '</div>',
+                ));
+                register_sidebar(array(
+                    'name' => 'Footer Area 4',
+                    'id' => 'footer4',
+                    'before_widget' => '<div class="widget-item">',
+                    'after_widget' => '</div>',
+                ));
+            }
+            add_action('widgets_init', 'ourWidgetsInit');
+        Taip pat widget'ams galima nustatyti tagus, klases ir t.t.
+    * Užregistravus widget'ų vietas per wp-admin galime juos pridėti į užregistruotas widget'ų vietas:
+        Appearance->Widgets.
+    * Norint atvaizduoti pridėtus widget'us reikia naudoti funkciją:
+        <?php dynamic_sidebar('footer1'); ?>
+    * Taip pat temos aplanke galima sukurti sidebar.php failą, jame iškviesti norimą widgetą ir
+        tada kode vietoj dynamic_sidebar('name'); funkcijos naudoti get_sidebar(); funkciją.

@@ -39,7 +39,7 @@ article.post:last-of-type {
 /* Header */
 .site-header {
     border-bottom: 2px solid #999999;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
 }
 
 .site-header h1 {
@@ -48,6 +48,53 @@ article.post:last-of-type {
 
 .site-header h5 {
     margin-top: 0;
+}
+
+/* Main column */
+.main-column {
+    width: 66%;
+    float: left;
+    border-right: 2px dotted #cccccc;
+    padding-right: 20px;
+}
+
+/* Side column */
+.secondary-column {
+    float: right;
+    width: 30%;
+}
+
+/* Footer widget area */
+.footer-widget-area {
+    width: 25%;
+    float: left;
+    padding-right: 40px;
+    box-sizing: border-box;
+}
+
+/* Widgets */
+.side-widget {
+    padding-left: 10px;
+}
+
+.widget-item ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.widget-item ul li {
+    margin-bottom: 3px;
+}
+
+.widget-item a {
+    text-decoration: none;
+}
+
+.footer-widgets {
+    padding: 5px;
+    margin-bottom: 5px;
+    border-bottom: 1px dotted #cccccc;
 }
 
 /* Footer */
@@ -293,4 +340,8 @@ article.post-gallery h2 {
     text-align: center;
     margin-top: 0;
     margin-bottom: 15px;
+}
+
+img.attachment-thumbnail {
+    max-width: 85%;
 }
