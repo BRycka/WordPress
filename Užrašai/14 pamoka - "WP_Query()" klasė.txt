@@ -1,0 +1,41 @@
+Video medžiaga:
+    http://learnwebcode.com/wordpress-custom-loop-wp_query-tutorial/
+    Youtube - https://www.youtube.com/watch?v=rw3jRE8IslM
+Documentation:
+    http://codex.wordpress.org/Class_Reference/WP_Query
+
+Keturiolikta pamoka - "WP_Query()" klasės naudojimas:
+    * "WP_Query" klasė gali būti naudojama: pvz.: atrinkti tam tikros kategorijos postus ir tik juos naudoti cikle.
+        <?php
+            /* Sukuriamas objektas, kuris atrenka categorijas kurių ID=4,
+               atvaizduoja du postus per puslapį, rikiuoja pagal datą ASC tvarka. */
+            $postasPosts = new WP_Query('cat=4&posts_per_page=2&orderby=date&order=ASC');
+
+            /* Toliau naudojamas standartinis ciklas postams, bet jame naudojamas objektas. */
+            if ($postasPosts->have_posts()) {
+                while ($postasPosts->have_posts()){
+                    $postasPosts->the_post(); ?>
+
+                    <h2>Last two posts in Postas category</h2>
+
+                    <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                    <?php the_excerpt(); ?>
+
+                <?php
+                }
+            }
+
+            /* Po ciklo būtina panaudoti šią funkciją */
+            wp_reset_postdata();
+        ?>
+    // Tradicinio ciklo postams pvz.:
+        <?php
+            if (have_posts()) {
+                while (have_posts()){
+                    the_post(); ?>
+                    <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                    <?php the_excerpt(); ?>
+                <?php
+                }
+            }
+        ?>

@@ -38,8 +38,43 @@ if (have_posts()) {
     <?php }
 } else {
     echo '<p>No Content Found</p>';
-}
+}?>
 
-get_footer();
+    <div class="home-columns clearfix">
 
-?>
+        <div class="one-half">
+            <?php
+            // postas posts loop begins here
+            $postasPosts = new WP_Query('cat=4&posts_per_page=2&orderby=date&order=ASC');
+            if ($postasPosts->have_posts()) {
+                while ($postasPosts->have_posts()){
+                    $postasPosts->the_post();
+                    ?>
+                    <h2>Last two posts in Postas category</h2>
+                    <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                    <?php the_excerpt(); ?>
+                <?php
+                }
+            }
+            wp_reset_postdata(); ?>
+        </div>
+
+        <div class="one-half last">
+            <?php
+            // gallery posts loop begins here
+            $galleryPosts = new WP_Query('cat=8&posts_per_page=2&orderby=date&order=ASC');
+            if ($galleryPosts->have_posts()) {
+                while ($galleryPosts->have_posts()){
+                    $galleryPosts->the_post();
+                    ?>
+                    <h2>Last two posts in Postas category</h2>
+                    <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                    <?php the_excerpt(); ?>
+                    <?php
+                }
+            }
+            wp_reset_postdata(); ?>
+        </div>
+    </div>
+
+<?php get_footer(); ?>

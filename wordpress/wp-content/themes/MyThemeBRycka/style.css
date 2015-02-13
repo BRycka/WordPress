@@ -358,3 +358,18 @@ article.post-gallery h2 {
 img.attachment-thumbnail {
     max-width: 85%;
 }
+
+/* Posts columns */
+.one-half {
+    width: 45%;
+    float: left;
+    margin-right: 10%;
+}
+
+.last {
+    margin-right: 0;
+}
+
+.home-columns {
+    padding-top: 30px;
+}
