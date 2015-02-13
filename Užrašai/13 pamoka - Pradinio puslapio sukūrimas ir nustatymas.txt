@@ -1,0 +1,13 @@
+Video medžiaga:
+    http://learnwebcode.com/wordpress-setup-custom-static-homepage/
+    Youtube - https://www.youtube.com/watch?v=YyVeigbUogk
+
+Trylikta pamoka - Pradinio puslapio sukūrimas ir nustatymas:
+    * Per wp-admin sukuriam naujus puslapius: Pages->Add new su skirtingais title (pvz.: Home ir Posts).
+        Tada Settings->Reading->Fron page displays pasirenkam "A static page (select below)".
+        Nustatom Front-page: Home ir Posts page: Posts. Tada pagrindinis puslapis bus prieš tai sukurtas Home,
+        o postai bus Posts puslapyje.
+    * Sukurtas home page naudos page.php šabloną. Jei norime jį pakeisti galime naudoti vieną iš 3 pamokos būdų,
+        arba šiam atvėjui skirtą būda:
+            Temos aplanke sukuriam front-page.php failą.
+            Į jį nukopijuojam viską iš page.php ir atliekam norimas korekcijas

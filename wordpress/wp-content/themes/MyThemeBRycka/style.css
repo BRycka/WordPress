@@ -78,8 +78,8 @@ article.post:last-of-type {
 }
 
 .widget-item ul {
-    list-style: none;
-    margin: 0;
+    /*list-style: none;*/
+    margin-left: 10px;
     padding: 0;
 }
 
@@ -89,12 +89,25 @@ article.post:last-of-type {
 
 .widget-item a {
     text-decoration: none;
+    color: #006EC3;
 }
 
 .footer-widgets {
     padding: 5px;
     margin-bottom: 5px;
     border-bottom: 1px dotted #cccccc;
+}
+
+.widget-item h4, .widget-item h2 {
+    font-size: 18px;
+    text-transform: uppercase;
+    margin-bottom: 7px;
+    color: #838383;
+    font-weight: 300;
+}
+
+.widget-item h2 {
+    margin-top: 0;
 }
 
 /* Footer */

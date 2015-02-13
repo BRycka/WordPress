@@ -83,7 +83,7 @@ function ourWidgetsInit()
         'id' => 'sidebar1',
         'before_widget' => '<div class="widget-item side-widget">',
         'after_widget' => '</div>',
-        'before_title' => '<h4 class="my-special-class">',
+        'before_title' => '<h4 class="widget-title">',
         'after_title' => '</h4>'
     ));
 
