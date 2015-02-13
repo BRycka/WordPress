@@ -1,0 +1,14 @@
+Video medžiaga:
+    http://learnwebcode.com/wordpress-search-form-and-results-tutorial/
+    Youtube - https://www.youtube.com/watch?v=Xetv0PZ3ruM
+
+Devinta pamoka - Paieškos forma ir rezultatų atvaizdavimas:
+    * Paieškos forma iškviečiama naudojant get_search_form(); funkciją. Norint redaguoti šią formą,
+    temos aplanke reikia sukurti failą pavadinimu searchform.php. Į jį nukopijuoti pradinį formos kodą ir
+    jį koreguoti.
+        Paieškos formos rezultatai rodomi index.php turiniu. Norint redaguoti paieškos rezultatų atvaizdavimą,
+        temos aplanke reikia sukurti failą search.php. Į jį nukopijuoti viską iš index.php
+        ir atlikti norimus pakeitimus.
+        Galima išspausdinti ir tekstą, ko yra ieškoma:
+            <h2>Search results for: <?php the_search_query(); ?></h2>
+        <?php the_search_query(); ?> funkcija grąžina paskutinę paieškos užklausą jei ji buvo įvykdyta.

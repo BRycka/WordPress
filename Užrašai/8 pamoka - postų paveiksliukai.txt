@@ -2,7 +2,7 @@ Video medžiaga:
     http://learnwebcode.com/wordpress-featured-image-custom-size/
     Youtube - https://www.youtube.com/watch?v=L_4crhIoXfY
 
-Aštunta pamoka - Postų paveiksliukų atvazdavimas, dydžio fiksavimas.
+Aštunta pamoka - Postų paveiksliukų atvazdavimas ir dydžio fiksavimas:
     * Kad galėtumėm naudoti "Featured image" funkciją per wp-admin,
         pirmiausia turime ją užregistruoti per functions.php.
             function bet_koks_pavadinimas()
