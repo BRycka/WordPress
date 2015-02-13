@@ -1,0 +1,11 @@
+Video medžiaga:
+    http://learnwebcode.com/wordpress-get_template_part-theme-development-tutorial/
+    Youtube - https://www.youtube.com/watch?list=PLpcSpRrAaOaqMA4RdhSnnNcaqOVpX7qi5&v=5WnhIMqPLoY
+
+10 pamoka - get_template_part($slug, $name); naudojimas, kad nekartoti to paties kodo keliuose vietose:
+    * Temos aplanke sukuriam naują failą, pvz.: content.php.
+        Į jį įdedam pasikartojantį kituose failuose kodą, o tuose failuose vietoj kodo tada naudojam
+        funkciją get_template_part('content');
+        content.php faile jei reikia galima naudoti if salygas,
+        kad kažkuri dalis kodo būtų naudojama tik tam tikruose vietose
+        (pvz.: if (is_archive() || is_search() ir t.t.) {} ).
