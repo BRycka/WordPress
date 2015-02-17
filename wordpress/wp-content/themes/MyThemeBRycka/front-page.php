@@ -45,12 +45,12 @@ if (have_posts()) {
         <div class="one-half">
             <?php
             // postas posts loop begins here
-            $postasPosts = new WP_Query('cat=4&posts_per_page=2&orderby=date&order=ASC');
+            $postasPosts = new WP_Query('cat=9&posts_per_page=2&orderby=date&order=ASC');
             if ($postasPosts->have_posts()) {
                 while ($postasPosts->have_posts()){
                     $postasPosts->the_post();
                     ?>
-                    <h2>Last two posts in Postas category</h2>
+                    <h2>Last two posts in 1st category</h2>
                     <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
                     <?php the_excerpt(); ?>
                 <?php
@@ -62,12 +62,12 @@ if (have_posts()) {
         <div class="one-half last">
             <?php
             // gallery posts loop begins here
-            $galleryPosts = new WP_Query('cat=8&posts_per_page=2&orderby=date&order=ASC');
+            $galleryPosts = new WP_Query('cat=10&posts_per_page=2&orderby=date&order=ASC');
             if ($galleryPosts->have_posts()) {
                 while ($galleryPosts->have_posts()){
                     $galleryPosts->the_post();
                     ?>
-                    <h2>Last two posts in Postas category</h2>
+                    <h2>Last two posts in 2nd category</h2>
                     <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
                     <?php the_excerpt(); ?>
                     <?php

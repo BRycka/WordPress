@@ -42,7 +42,7 @@ function has_children()
 // Customize excerp word count length (default value is 55 (max = 140?))
 function custom_excerpt_length()
 {
-    return 100;
+    return 30;
 }
 
 add_filter('excerpt_length', 'custom_excerpt_length');

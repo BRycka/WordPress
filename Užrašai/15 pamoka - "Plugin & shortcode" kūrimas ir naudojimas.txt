@@ -1,0 +1,68 @@
+Tutorial:
+    http://blog.bluefur.com/2008/05/15/wordpress-plugin-tutorial-hello-world/
+Documentation:
+    http://codex.wordpress.org/Writing_a_Plugin
+    http://codex.wordpress.org/Shortcode_API
+
+15 pamoka - "Plugin & shortcode" kūrimas ir naudojimas per wp-admin/in-line:
+    * Norint sukurti plugina, pirmiausia reikia papildyti WordPress katalogą sukuriant plugino failus:
+        wordpress->wp-content->plugins... . Šitoje direktorijoje reikia sukurti naują aplanką ir
+        jį pavadinti atitinkamai pagal "Plugino" prasmę (pvz.: helloworld).
+        Aplanko viduje sukuriam naują .php failą tokiu pat pavadinimu (pvz.: helloworld.php).
+        Jame komentaro forma turime nurodyti plugino informaciją ir tik tada jis bus matomas
+        per wp-admin (bus matomas nurodžius bent plugino pavadinimą):
+            <?php
+            /**
+             * Plugin Name: Name of the plugin, must be unique.
+             * Plugin URI: http://URI_Of_Page_Describing_Plugin_and_Updates
+             * Description: A brief description of the plugin.
+             * Version: The plugin's version number. Example: 1.0.0
+             * Author: Name of the plugin author
+             * Author URI: http://URI_Of_The_Plugin_Author
+             * Text Domain: Optional. Plugin's text domain for localization. Example: mytextdomain
+             * Domain Path: Optional. Plugin's relative directory path to .mo files. Example: /locale/
+             * Network: Optional. Whether the plugin can only be activated network wide. Example: true
+             * License: A short license name. Example: GPL2
+             */
+             /*  Copyright YEAR  PLUGIN_AUTHOR_NAME  (email : PLUGIN AUTHOR EMAIL)
+
+                 This program is free software; you can redistribute it and/or modify
+                 it under the terms of the GNU General Public License, version 2, as
+                 published by the Free Software Foundation.
+
+                 This program is distributed in the hope that it will be useful,
+                 but WITHOUT ANY WARRANTY; without even the implied warranty of
+                 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+                 GNU General Public License for more details.
+
+                 You should have received a copy of the GNU General Public License
+                 along with this program; if not, write to the Free Software
+                 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+             */
+    * Norint sukurti "shortcode", naudojame funkciją add_shortcode();. Funkcijai reikia perduoti du parametrus:
+        pirmas - shortcode pavadinimas, kuris turi būti iš mažujų raidžių ir rekomenduotina, kad būtų tik iš raidžių.
+        antras - funkcijos pavadinimas į kurią bus kreipiamasi "shortcode" panaudojimo atvėju.
+            add_shortcode('helloworld', 'hello_world');
+    * Funkcija į kurią kreipiamasi "shortcode" panaudojimo atvėju gali turėti 3 parametrus:
+        $atts, $content, $tag.
+        $atts - šis parametras priima i funkcija perduodamus parametrus,
+        kurie turi būti aprašyti masyvo forma pačioje funkcijoje:
+            function hello_world($atts)
+            {
+                $a = shortcode_atts(array(
+                    'first' => 'Hello',
+                    'second' => 'World',
+                    'third' => '!'
+                ), $atts);
+                echo "first: ".$a['first']."<br/>";
+                echo "second: ".$a['second']."<br/>";
+                echo "third: ".$a['third']."<br/>";
+            }
+        Pagal šitą pavyzdį naudodami "shortcode" į funkciją galėtumėme perduoti tokius tris parametrus:
+            first, second, third (pvz.: [helloworld first='1' second='2' third='3']).
+            Parametro pavadinimas sutampa su masyvo rakto pavadinimu, bei analogiškai sutampa jų reikšmės.
+            Jei naudodami "shortcode" nenurodysime jokiu parametrų, funkcija naudos reikšmes nurodytas masyve.
+    * Į funkciją aprašytą plugino faile galima kreiptis ir tiesiai iš kodo, pvz.:
+        <?php if (function_exists('hello_world')) {
+            hello_world(array('first' => 'tekstas', 'second' => 'iš kodo'));
+        } ?>
