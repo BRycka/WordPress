@@ -31,9 +31,9 @@ if (have_posts()) {
                 </nav>
             <?php } ?>
             <h2><?php the_title(); ?></h2>
-            <p>This is text form code!</p>
+            <p>This is text from code!</p>
             <?php the_content(); ?>
-            <p>This is text form code! - this theame is created by <?php the_author(); ?></p>
+            <p>This is text from code! - this theame is created by <?php the_author(); ?></p>
         </article>
     <?php }
 } else {

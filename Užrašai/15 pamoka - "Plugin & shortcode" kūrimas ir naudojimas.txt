@@ -3,6 +3,13 @@ Tutorial:
 Documentation:
     http://codex.wordpress.org/Writing_a_Plugin
     http://codex.wordpress.org/Shortcode_API
+Plugin Handbook:
+    https://developer.wordpress.org/plugins/intro/
+Plugin MVC:
+    https://iandunn.name/content/presentations/wp-oop-mvc/mvc.php#/11
+Action & Filter hooks lists:
+    https://codex.wordpress.org/Plugin_API/Action_Reference
+    https://codex.wordpress.org/Plugin_API/Filter_Reference
 
 15 pamoka - "Plugin & shortcode" kūrimas ir naudojimas per wp-admin/in-line:
     * Norint sukurti plugina, pirmiausia reikia papildyti WordPress katalogą sukuriant plugino failus:
