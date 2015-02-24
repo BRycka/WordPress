@@ -1,6 +1,4 @@
-input[type=text] {
-    min-width: 205px;
-}
+/* Messages */
 .success_msg {
     border: 1px solid darkgreen;
     background-color: lightgreen;
@@ -29,6 +27,31 @@ input[type=text] {
     max-width: 32%;
     text-align: center;
 }
+
+
 .required {
     color: #ff0000;
 }
+
+/* wp-admin select poll page */
+input[type=text] {
+    min-width: 205px;
+}
+.mypoll-select-right {
+    width: 75%;
+    float: right;
+}
+.mypoll-select-left {
+    width: 25%;
+    float: left;
+}
+.mypoll-select-right table td {
+    padding-right: 20px;
+    padding-bottom: 10px;
+}
+
+
+/* Clearfix */
+.clearfix:before, .clearfix:after { content: ""; display: table; }
+.clearfix:after { clear: both; }
+.clearfix { *zoom: 1; }

@@ -157,18 +157,20 @@ function mypoll_admin_poll_page()
             delete_option('success');
         }
         ?>
-        <h2>Select Poll</h2>
-        <?php $polls = mypoll_get_poll_list(); ?>
-        <form method="post">
-            <select name="mypoll_select_poll">
-                <?php foreach ($polls as $poll) { ?>
-                    <option value="<?php echo $poll->id; ?>" <?php if (isset($_POST['mypoll_select_poll']) && $_POST['mypoll_select_poll']==$poll->id) { ?> selected <?php } ?> >
-                        <?php echo $poll->poll_name; ?>
-                    </option>
-                <?php } ?>
-            </select>
-            <input type="submit" name="mypoll_select_poll_submit" value="select"/>
-        </form>
+        <div class="mypoll-select-container">
+            <h2>Select Poll</h2>
+            <?php $polls = mypoll_get_poll_list(); ?>
+            <form method="post">
+                <select name="mypoll_select_poll">
+                    <?php foreach ($polls as $poll) { ?>
+                        <option value="<?php echo $poll->id; ?>" <?php if (isset($_POST['mypoll_select_poll']) && $_POST['mypoll_select_poll']==$poll->id) { ?> selected <?php } ?> >
+                            <?php echo $poll->poll_name; ?>
+                        </option>
+                    <?php } ?>
+                </select>
+                <input type="submit" name="mypoll_select_poll_submit" value="select"/>
+            </form>
+        </div>
         <hr>
         <?php
         if (isset($_POST['mypoll_select_poll_submit']) || isset($_GET['poll'])) {
@@ -179,62 +181,83 @@ function mypoll_admin_poll_page()
             }
             $poll = mypoll_get_poll_by_id($poll_id);
             ?>
-            <form method="post">
-                <table id="editPollTable">
+            <div class="mypoll-select-left clearfix">
+                <form method="post">
+                    <table id="editPollTable">
+                        <tr>
+                            <td>Poll name</td>
+                            <td><input type="text" name="mypoll_name" value="<?php echo $poll['name']; ?>"/></td>
+                        </tr>
+                        <tr>
+                            <td>Poll question</td>
+                            <td><textarea name="mypoll_question"><?php echo $poll['question']; ?></textarea></td>
+                        </tr>
+                        <tr>
+                            <td>Answers:</td>
+                        </tr>
+                        <?php $answers_count=0; foreach ($poll['answers'] as $answer) { ?>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <input
+                                        type="text"
+                                        name="<?php echo 'mypoll_answer'.++$answers_count; ?>"
+                                        value="<?php echo $answer['answer']; ?>"
+                                        <?php if ($answers_count == 1 || $answers_count == 2) {
+                                            ?>required <?php
+                                        } ?>
+                                    />
+                                </td>
+                            </tr>
+                        <?php } ?>
+                    </table>
+                    <input type="hidden" name="mypoll_question_id" value="<?php
+                                                                            if (isset($_POST['mypoll_select_poll'])) {
+                                                                                echo $_POST['mypoll_select_poll'];
+                                                                            } elseif (isset($_GET['poll'])) {
+                                                                                echo $_GET['poll'];
+                                                                            }
+                                                                        ?>"/>
+                    <input type="hidden" id="hidden" name="mypoll_total_answers" value="<?php echo $answers_count; ?>"/>
+            </div>
+            <div class="mypoll-select-right clearfix">
+                <table>
                     <tr>
-                        <td>Poll name</td>
-                        <td><input type="text" name="mypoll_name" value="<?php echo $poll['name']; ?>"/></td>
+                        <td>Add answers: </td>
                         <td><a href="#" onclick="mypoll_add_field_to_edit()">+Add answer</a>
+                    </tr>
+                    <tr>
+                        <td>Save changes: </td>
                         <td><input type="submit" onclick="return confirm('All votes will be reset!')" name="mypoll_edit_poll" value="Save"/></td>
+                    </tr>
+                    <tr>
+                        <td>Delete poll: </td>
                         <td><input type="submit" onclick="return confirm('Warning! You will delete poll: <?php echo $poll['name']; ?>!')" name="mypoll_delete" value="Delete Poll"/></td>
-                        <td>Short code: <input
-                                            type="text"
-                                            value="[mypoll_poll id=<?php
-                                                    if (isset($_POST['mypoll_select_poll'])) {
-                                                        echo $_POST['mypoll_select_poll'];
-                                                    } elseif (isset($_GET['poll'])) {
-                                                        echo $_GET['poll'];
-                                                    } else {
-                                                        echo "error";
-                                                    }
-                                                ?>]"
-                                            readonly
-                                        />
-                        </td>
+                    </tr>
+                    <tr>
+                        <td>Clear all IP: </td>
                         <td><input type="submit" name="mypoll_clear" onclick="return confirm('All IP\'s on this poll will be cleared!')" value="Clear IP's"/></td>
                     </tr>
                     <tr>
-                        <td>Poll question</td>
-                        <td><textarea name="mypoll_question"><?php echo $poll['question']; ?></textarea></td>
-                    </tr>
-                    <tr>
-                        <td>Answers:</td>
-                    </tr>
-                    <?php $answers_count=0; foreach ($poll['answers'] as $answer) { ?>
-                        <tr>
-                            <td></td>
-                            <td>
-                                <input
-                                    type="text"
-                                    name="<?php echo 'mypoll_answer'.++$answers_count; ?>"
-                                    value="<?php echo $answer['answer']; ?>"
-                                    <?php if ($answers_count == 1 || $answers_count == 2) {
-                                        ?>required <?php
-                                    } ?>
+                        <td>Short code: </td>
+                        <td><input
+                                type="text"
+                                value="[mypoll_poll id=<?php
+                                if (isset($_POST['mypoll_select_poll'])) {
+                                    echo $_POST['mypoll_select_poll'];
+                                } elseif (isset($_GET['poll'])) {
+                                    echo $_GET['poll'];
+                                } else {
+                                    echo "error";
+                                }
+                                ?>]"
+                                readonly
                                 />
-                            </td>
-                        </tr>
-                    <?php } ?>
+                        </td>
+                    </tr>
                 </table>
-                <input type="hidden" name="mypoll_question_id" value="<?php
-                                                                        if (isset($_POST['mypoll_select_poll'])) {
-                                                                            echo $_POST['mypoll_select_poll'];
-                                                                        } elseif (isset($_GET['poll'])) {
-                                                                            echo $_GET['poll'];
-                                                                        }
-                                                                    ?>"/>
-                <input type="hidden" id="hidden" name="mypoll_total_answers" value="<?php echo $answers_count; ?>"/>
-            </form>
+                </form>
+            </div>
             <?php
         }
         ?>
