@@ -11,6 +11,7 @@ function mypoll_add_field() {
     var input = document.createElement("input");
     input.type = "text";
     input.name = "mypoll_answer"+(value + 1);
+    input.autocomplete = "off";
     cell1.innerHTML = "Answer #" + (value + 1) + " :";
     cell2.appendChild(input);
 }

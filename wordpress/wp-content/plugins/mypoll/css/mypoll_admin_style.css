@@ -1,3 +1,34 @@
 input[type=text] {
     min-width: 205px;
 }
+.success_msg {
+    border: 1px solid darkgreen;
+    background-color: lightgreen;
+    color: darkgreen;
+    padding: 5px;
+    font-size: 15px;
+    max-width: 32%;
+    text-align: center;
+}
+.update_msg {
+    border: 1px solid darkgoldenrod;
+    background-color: #ffffe0;
+    color: darkgoldenrod;
+    padding: 5px;
+    font-size: 15px;
+    max-width: 32%;
+    /*max-width: 50%;*/
+    text-align: center;
+}
+.error_msg {
+    border: 1px solid darkred;
+    background-color: lightcoral;
+    color: darkred;
+    padding: 5px;
+    font-size: 15px;
+    max-width: 32%;
+    text-align: center;
+}
+.required {
+    color: #ff0000;
+}

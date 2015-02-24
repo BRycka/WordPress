@@ -28,6 +28,8 @@
  * along with My Plugin. If not, see {URI to Plugin License}.
  */
 
+require_once ABSPATH.'wp-includes/pluggable.php';
+
 /**
  * Activation code
  */
@@ -124,6 +126,37 @@ function mypoll_admin_poll_page()
 {
     ?>
     <div class="wrap">
+        <?php
+        if ($notices = get_option('update')) {
+            foreach ($notices as $notice) {
+                ?>
+                <div class="update_msg"><?php echo $notice; ?></div>
+            <?php
+            }
+            time_nanosleep(0, 100000000);
+            delete_option('update');
+
+        } else {
+//            var_dump(get_option('update'));
+        }
+        if ($notices = get_option('error')) {
+            foreach ($notices as $notice) {
+                ?>
+                <div class="error_msg"><?php echo $notice; ?></div>
+            <?php
+            }
+            time_nanosleep(0, 100000000);
+            delete_option('error');
+        }
+        if ($notices = get_option('success')) {
+            foreach ($notices as $notice) {
+                ?>
+                <div class="success_msg"><?php echo $notice; ?></div>
+            <?php
+            }
+            delete_option('success');
+        }
+        ?>
         <h2>Select Poll</h2>
         <?php $polls = mypoll_get_poll_list(); ?>
         <form method="post">
@@ -138,8 +171,13 @@ function mypoll_admin_poll_page()
         </form>
         <hr>
         <?php
-        if (isset($_POST['mypoll_select_poll_submit'])) {
-            $poll = mypoll_get_poll_by_id((int)$_POST['mypoll_select_poll']);
+        if (isset($_POST['mypoll_select_poll_submit']) || isset($_GET['poll'])) {
+            if (isset($_POST['mypoll_select_poll_submit'])) {
+                $poll_id = $_POST['mypoll_select_poll'];
+            } elseif (isset($_GET['poll'])) {
+                $poll_id = $_GET['poll'];
+            }
+            $poll = mypoll_get_poll_by_id($poll_id);
             ?>
             <form method="post">
                 <table id="editPollTable">
@@ -149,7 +187,20 @@ function mypoll_admin_poll_page()
                         <td><a href="#" onclick="mypoll_add_field_to_edit()">+Add answer</a>
                         <td><input type="submit" onclick="return confirm('All votes will be reset!')" name="mypoll_edit_poll" value="Save"/></td>
                         <td><input type="submit" onclick="return confirm('Warning! You will delete poll: <?php echo $poll['name']; ?>!')" name="mypoll_delete" value="Delete Poll"/></td>
-                        <td>Short code: <input type="text" value="[mypoll_poll id=<?php echo $_POST['mypoll_select_poll']; ?>]" readonly/></td>
+                        <td>Short code: <input
+                                            type="text"
+                                            value="[mypoll_poll id=<?php
+                                                    if (isset($_POST['mypoll_select_poll'])) {
+                                                        echo $_POST['mypoll_select_poll'];
+                                                    } elseif (isset($_GET['poll'])) {
+                                                        echo $_GET['poll'];
+                                                    } else {
+                                                        echo "error";
+                                                    }
+                                                ?>]"
+                                            readonly
+                                        />
+                        </td>
                         <td><input type="submit" name="mypoll_clear" onclick="return confirm('All IP\'s on this poll will be cleared!')" value="Clear IP's"/></td>
                     </tr>
                     <tr>
@@ -175,7 +226,13 @@ function mypoll_admin_poll_page()
                         </tr>
                     <?php } ?>
                 </table>
-                <input type="hidden" name="mypoll_question_id" value="<?php echo $_POST['mypoll_select_poll']; ?>"/>
+                <input type="hidden" name="mypoll_question_id" value="<?php
+                                                                        if (isset($_POST['mypoll_select_poll'])) {
+                                                                            echo $_POST['mypoll_select_poll'];
+                                                                        } elseif (isset($_GET['poll'])) {
+                                                                            echo $_GET['poll'];
+                                                                        }
+                                                                    ?>"/>
                 <input type="hidden" id="hidden" name="mypoll_total_answers" value="<?php echo $answers_count; ?>"/>
             </form>
             <?php
@@ -205,27 +262,23 @@ function mypoll_admin_create_page()
         <form method="post">
             <table id="newPollTable">
                 <tr>
-                    <td>Poll name*</td>
+                    <td>Poll name<span class="required">*</span></td>
                     <td><input type="text" name="mypoll_name" required/></td>
                     <td><a href="#" onclick="mypoll_add_field()">+Add answer</a></td>
                     <td><input type="submit" name="mypoll_create_submit" value="Create"/></td>
                 </tr>
                 <tr>
-                    <td>Question*</td>
+                    <td>Question<span class="required">*</span></td>
                     <td><textarea name="mypoll_question" required></textarea></td>
                 </tr>
                 <tr>
-                    <td>Answer #1*</td>
-                    <td><input type="text" name="mypoll_answer1" required/></td>
+                    <td>Answer #1<span class="required">*</span></td>
+                    <td><input type="text" name="mypoll_answer1" required autocomplete="off"/></td>
                 </tr>
                 <tr>
-                    <td>Answer #2*</td>
-                    <td><input type="text" name="mypoll_answer2" required/></td>
+                    <td>Answer #2<span class="required">*</span></td>
+                    <td><input type="text" name="mypoll_answer2" required autocomplete="off"/></td>
                 </tr>
-<!--                <tr>-->
-<!--                    <td id="fieldLabel"></td>-->
-<!--                    <td id="fieldInput"></td>-->
-<!--                </tr>-->
             </table>
             <input type="hidden" name="mypoll_total_answers" id="hidden" value="2"/>
             <table>
@@ -330,6 +383,11 @@ function mypoll_delete_poll()
             'question_id' => $_POST['mypoll_question_id']
         )
     );
+    $notices = get_option('error', array());
+    $notices[] = "Poll was successfully removed!";
+    update_option('error', $notices);
+    wp_redirect('admin.php?page=my-poll&poll='.$_POST['mypoll_question_id']);
+    wp_redirect('admin.php?page=my-poll');
 }
 
 function mypoll_clear_ip()
@@ -342,6 +400,11 @@ function mypoll_clear_ip()
             'question_id' => $_POST['mypoll_question_id']
         )
     );
+    $notices = get_option('update', array());
+    $notices[] = "All ip was successfully removed!";
+    update_option('update', $notices);
+    wp_redirect('admin.php?page=my-poll&poll='.$_POST['mypoll_question_id']);
+    return true;
 }
 
 function mypoll_update_poll_votes()
@@ -380,6 +443,7 @@ function mypoll_update_poll_votes()
                     'answer_id' => $answer_id
                 )
             );
+        wp_redirect('/');
     }
 
 }
@@ -467,6 +531,10 @@ function mypoll_update_data($poll)
                     );
                 }
             }
+            $notices = get_option('update', array());
+            $notices[] = "Poll successfully updated!";
+            update_option('update', $notices);
+            wp_redirect('admin.php?page=my-poll&poll='.$poll['mypoll_question_id']);
         }
     }
 }
@@ -522,19 +590,19 @@ function mypoll_insert_data($poll)
                     );
                 }
             }
-
-//            wp_redirect('admin.php?page=my-poll');
+            $notices = get_option('success', array());
+            $notices[] = "Poll successfully created!";
+            update_option('success', $notices);
+            wp_redirect('admin.php?page=my-poll&poll='.$last_inserted_id);
             return true;
         } else {
             return "Poll already exist";
         }
     }
 }
-
 /**
  * End of database code
  */
-
 
 /**
  * Short codes
