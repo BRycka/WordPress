@@ -163,7 +163,9 @@ function mypoll_admin_poll_page()
             <form method="post">
                 <select name="mypoll_select_poll">
                     <?php foreach ($polls as $poll) { ?>
-                        <option value="<?php echo $poll->id; ?>" <?php if (isset($_POST['mypoll_select_poll']) && $_POST['mypoll_select_poll']==$poll->id) { ?> selected <?php } ?> >
+                        <option value="<?php echo $poll->id; ?>"
+                            <?php if ((isset($_POST['mypoll_select_poll']) && $_POST['mypoll_select_poll']==$poll->id) ||
+                            isset($_GET['poll']) && $_GET['poll'] == $poll->id) { ?> selected <?php } ?> >
                             <?php echo $poll->poll_name; ?>
                         </option>
                     <?php } ?>
