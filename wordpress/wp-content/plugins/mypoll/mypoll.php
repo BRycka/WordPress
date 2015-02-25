@@ -231,12 +231,12 @@ function mypoll_admin_poll_page()
                         <td><input type="submit" onclick="return confirm('All votes will be reset!')" name="mypoll_edit_poll" value="Save"/></td>
                     </tr>
                     <tr>
-                        <td>Delete poll: </td>
-                        <td><input type="submit" onclick="return confirm('Warning! You will delete poll: <?php echo $poll['name']; ?>!')" name="mypoll_delete" value="Delete Poll"/></td>
-                    </tr>
-                    <tr>
                         <td>Clear all IP: </td>
                         <td><input type="submit" name="mypoll_clear" onclick="return confirm('All IP\'s on this poll will be cleared!')" value="Clear IP's"/></td>
+                    </tr>
+                    <tr>
+                        <td>Delete poll: </td>
+                        <td><input type="submit" onclick="return confirm('Warning! You will delete poll: <?php echo $poll['name']; ?>!')" name="mypoll_delete" value="Delete Poll"/></td>
                     </tr>
                     <tr>
                         <td>Short code: </td>
@@ -254,6 +254,15 @@ function mypoll_admin_poll_page()
                                 readonly
                                 />
                         </td>
+                        <td>Also you can use option - name="off" or name="on". By default name value is on.
+                            <br/> e.g. [mypoll_poll id=<?php
+                            if (isset($_POST['mypoll_select_poll'])) {
+                                echo $_POST['mypoll_select_poll'];
+                            } elseif (isset($_GET['poll'])) {
+                                echo $_GET['poll'];
+                            } else {
+                                echo "error";
+                            } ?> name="off"]</td>
                     </tr>
                 </table>
                 </form>
@@ -466,9 +475,14 @@ function mypoll_update_poll_votes()
                     'answer_id' => $answer_id
                 )
             );
-        wp_redirect('/');
+        add_action('template_redirect', 'mypoll_vote_redirect');
     }
+}
 
+function mypoll_vote_redirect()
+{
+    wp_redirect('http://'.$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"]);
+    exit();
 }
 
 function mypoll_create_poll_array()
@@ -671,7 +685,8 @@ function mypoll_get_poll($atts)
     $voters_table_name = $wpdb->prefix."mypoll_voters";
     $questions_table_name = $wpdb->prefix."mypoll_questions";
     $a = shortcode_atts(array(
-        'id' => ''
+        'id' => '',
+        'name' => 'on'
     ), $atts);
     if ($a['id'] != '') {
         if ($wpdb->get_row("SELECT id FROM $questions_table_name WHERE id={$a['id']}")) {
@@ -703,9 +718,11 @@ function mypoll_get_poll($atts)
                 $total_votes = mypoll_get_total_votes($poll['question_id']);
                 $output .=
                     '<div class="wrap">
-                        <table>
-                            <tr><td colspan="3"><div class="mypoll_name">'.$poll["name"].'</div></td></tr>
-                            <tr><td colspan="3"><div class="mypoll_question">'.$poll["question"].'</div></td></tr>';
+                        <table>';
+                if ($a['name'] == 'on') {
+                    $output .= '<tr><td colspan="3"><div class="mypoll_name">'.$poll["name"].'</div></td></tr>';
+                }
+                $output .= '<tr><td colspan="3"><div class="mypoll_question">'.$poll["question"].'</div></td></tr>';
                 foreach ($poll['answers'] as $answer) {
                     $votes = mypoll_get_votes($answer["answer_id"])->votes;
                     $output .= '<tr>
