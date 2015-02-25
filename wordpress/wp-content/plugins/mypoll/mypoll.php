@@ -136,8 +136,6 @@ function mypoll_admin_poll_page()
             time_nanosleep(0, 100000000);
             delete_option('update');
 
-        } else {
-//            var_dump(get_option('update'));
         }
         if ($notices = get_option('error')) {
             foreach ($notices as $notice) {
@@ -256,15 +254,6 @@ function mypoll_admin_poll_page()
                                 readonly
                                 />
                         </td>
-                        <td>Also you can use option - name="off" or name="on". By default name value is on.
-                            <br/> e.g. [mypoll_poll id=<?php
-                            if (isset($_POST['mypoll_select_poll'])) {
-                                echo $_POST['mypoll_select_poll'];
-                            } elseif (isset($_GET['poll'])) {
-                                echo $_GET['poll'];
-                            } else {
-                                echo "error";
-                            } ?> name="off"]</td>
                     </tr>
                 </table>
                 </form>
@@ -292,26 +281,56 @@ function mypoll_admin_create_page()
 {
     ?>
     <div class="wrap">
+        <?php
+            if ($notices = get_option('error')) {
+                foreach ($notices as $notice) {
+                    ?>
+                    <div class="error_msg"><?php echo $notice; ?></div>
+                    <?php
+                }
+                time_nanosleep(0, 100000000);
+                delete_option('error');
+            }
+        ?>
         <h2>Create new Poll</h2>
         <form method="post">
             <table id="newPollTable">
                 <tr>
                     <td>Poll name<span class="required">*</span></td>
-                    <td><input type="text" name="mypoll_name" required/></td>
+                    <td>
+                        <input type="text"
+                               name="mypoll_name"
+                               value="<?php if (isset($_POST['mypoll_name'])) { echo $_POST['mypoll_name']; } ?>"
+                               required/>
+                    </td>
                     <td><a href="#" onclick="mypoll_add_field()">+Add answer</a></td>
                     <td><input type="submit" name="mypoll_create_submit" value="Create"/></td>
                 </tr>
                 <tr>
                     <td>Question<span class="required">*</span></td>
-                    <td><textarea name="mypoll_question" required></textarea></td>
+                    <td><textarea name="mypoll_question" required><?php if (isset($_POST['mypoll_question'])) { echo $_POST['mypoll_question']; } ?></textarea></td>
                 </tr>
                 <tr>
                     <td>Answer #1<span class="required">*</span></td>
-                    <td><input type="text" name="mypoll_answer1" required autocomplete="off"/></td>
+                    <td>
+                        <input
+                            type="text"
+                            name="mypoll_answer1"
+                            value="<?php if (isset($_POST['mypoll_answer1'])) { echo $_POST['mypoll_answer1']; } ?>"
+                            required
+                            autocomplete="off"/>
+                    </td>
                 </tr>
                 <tr>
                     <td>Answer #2<span class="required">*</span></td>
-                    <td><input type="text" name="mypoll_answer2" required autocomplete="off"/></td>
+                    <td>
+                        <input
+                            type="text"
+                            name="mypoll_answer2"
+                            value="<?php if (isset($_POST['mypoll_answer2'])) { echo $_POST['mypoll_answer2']; } ?>"
+                            required
+                            autocomplete="off"/>
+                    </td>
                 </tr>
             </table>
             <input type="hidden" name="mypoll_total_answers" id="hidden" value="2"/>
@@ -370,7 +389,6 @@ function mypoll_get_poll_by_id($id)
 }
 
 if (isset($_POST['mypoll_create_submit']) || isset($_POST['mypoll_edit_poll'])) {
-//    mypoll_insert_data();
     mypoll_create_poll_array();
 }
 
@@ -508,15 +526,22 @@ function mypoll_create_poll_array()
 
 function mypoll_update_data($poll)
 {
-//    var_dump($poll);
-//    die;
     if (is_array($poll) && !empty($poll)) {
         global $wpdb;
         $questions_table_name = $wpdb->prefix."mypoll_questions";
         $answers_table_name = $wpdb->prefix."mypoll_answers";
         $votes_table_name = $wpdb->prefix."mypoll_votes";
         $voters_table_name = $wpdb->prefix."mypoll_voters";
-        $find_if_exist = $wpdb->get_results("SELECT * FROM $questions_table_name WHERE poll_name = '".$poll['poll_name']."'");
+        $find_if_exist = $wpdb->query(
+            $wpdb->prepare(
+                "
+                SELECT *
+                FROM $questions_table_name
+                WHERE poll_name = %s
+                ",
+                $poll['poll_name']
+            )
+        );
         $current_poll_name = $wpdb->get_row("SELECT poll_name FROM $questions_table_name WHERE id = '".$poll['mypoll_question_id']."'");
         if (count($find_if_exist) < 1 || $poll['poll_name'] == $current_poll_name->poll_name) {
             $wpdb->delete(
@@ -540,8 +565,8 @@ function mypoll_update_data($poll)
             $wpdb->update(
                 $questions_table_name,
                 array(
-                    'poll_name' => $poll['poll_name'],
-                    'question' => $poll['question']
+                    'poll_name' => htmlspecialchars($poll['poll_name']),
+                    'question' => htmlspecialchars($poll['question'])
                 ),
                 array(
                     'id' => $poll['mypoll_question_id']
@@ -552,8 +577,8 @@ function mypoll_update_data($poll)
                     $wpdb->insert(
                         $answers_table_name,
                         array(
-                            'question_id' => $poll['mypoll_question_id'],
-                            'answer' => $answer['answer']
+                            'question_id' => htmlspecialchars($poll['mypoll_question_id']),
+                            'answer' => htmlspecialchars($answer['answer'])
                         ),
                         array(
                             '%d',
@@ -563,8 +588,8 @@ function mypoll_update_data($poll)
                     $wpdb->insert(
                         $votes_table_name,
                         array(
-                            'question_id' => $poll['mypoll_question_id'],
-                            'answer_id' =>$wpdb->insert_id,
+                            'question_id' => htmlspecialchars($poll['mypoll_question_id']),
+                            'answer_id' => htmlspecialchars($wpdb->insert_id),
                             'votes' => 0
                         )
                     );
@@ -585,13 +610,22 @@ function mypoll_insert_data($poll)
         $questions_table_name = $wpdb->prefix."mypoll_questions";
         $answers_table_name = $wpdb->prefix."mypoll_answers";
         $votes_table_name = $wpdb->prefix."mypoll_votes";
-        $find_if_exist = $wpdb->get_results("SELECT * FROM $questions_table_name WHERE poll_name = '".$poll['poll_name']."'");
-        if (count($find_if_exist) < 1) {
+        $find_if_exist = $wpdb->query(
+            $wpdb->prepare(
+                "
+                SELECT *
+                FROM $questions_table_name
+                WHERE poll_name = %s
+                ",
+                htmlspecialchars($poll['poll_name'])
+            )
+        );
+        if ($find_if_exist < 1) {
             $wpdb->insert(
                 $questions_table_name,
                 array(
-                    'poll_name' => $poll['poll_name'],
-                    'question' => $poll['question']
+                    'poll_name' => htmlspecialchars($poll['poll_name']),
+                    'question' => htmlspecialchars($poll['question'])
                 ),
                 array(
                     '%s',
@@ -606,8 +640,8 @@ function mypoll_insert_data($poll)
                     $wpdb->insert(
                         $answers_table_name,
                         array(
-                            'question_id' => $last_inserted_id,
-                            'answer' => $answer['answer']
+                            'question_id' => htmlspecialchars($last_inserted_id),
+                            'answer' => htmlspecialchars($answer['answer'])
                         ),
                         array(
                             '%d',
@@ -617,8 +651,8 @@ function mypoll_insert_data($poll)
                     $wpdb->insert(
                         $votes_table_name,
                         array(
-                            'question_id' => $last_inserted_id,
-                            'answer_id' => $wpdb->insert_id,
+                            'question_id' => htmlspecialchars($last_inserted_id),
+                            'answer_id' => htmlspecialchars($wpdb->insert_id),
                             'votes' => 0
                         ),
                         array(
@@ -632,10 +666,13 @@ function mypoll_insert_data($poll)
             $notices = get_option('success', array());
             $notices[] = "Poll successfully created!";
             update_option('success', $notices);
+            delete_option('error');
             wp_redirect('admin.php?page=my-poll&poll='.$last_inserted_id);
             return true;
         } else {
-            return "Poll already exist";
+            $notices = get_option('error', array());
+            $notices[] = "Poll named \"".$poll['poll_name']."\" already exist!";
+            update_option('error', $notices);
         }
     }
 }
@@ -688,7 +725,6 @@ function mypoll_get_poll($atts)
     $questions_table_name = $wpdb->prefix."mypoll_questions";
     $a = shortcode_atts(array(
         'id' => '',
-        'name' => 'on'
     ), $atts);
     if ($a['id'] != '') {
         if ($wpdb->get_row("SELECT id FROM $questions_table_name WHERE id={$a['id']}")) {
@@ -720,11 +756,9 @@ function mypoll_get_poll($atts)
                 $total_votes = mypoll_get_total_votes($poll['question_id']);
                 $output .=
                     '<div class="wrap">
-                        <table>';
-                if ($a['name'] == 'on') {
-                    $output .= '<tr><td colspan="3"><div class="mypoll_name">'.$poll["name"].'</div></td></tr>';
-                }
-                $output .= '<tr><td colspan="3"><div class="mypoll_question">'.$poll["question"].'</div></td></tr>';
+                        <table>
+                        <tr><td colspan="3"><div class="mypoll_name">'.$poll["name"].'</div></td></tr>
+                        <tr><td colspan="3"><div class="mypoll_question">'.$poll["question"].'</div></td></tr>';
                 foreach ($poll['answers'] as $answer) {
                     $votes = mypoll_get_votes($answer["answer_id"])->votes;
                     $output .= '<tr>
